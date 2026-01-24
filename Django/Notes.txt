@@ -1,0 +1,28 @@
+****What is Django?****
+It is a free and open-source framework for building web apps with Python.
+It is not the only one framework in python but it is the most popular one.
+It helps us to build a website in a fewer lines of code.
+It comes with a lot of features so we don't have to code it from the scratch.
+
+****Django features****
+(i)The admin site
+An admin interface for managing our data.
+(ii)Object Relational Mapper(ORM)
+That abstracts a database, so we can query the data without writing a lot of SQL code.
+(iii)Authetication
+Package for identifying user
+(iv)Caching
+
+****Installing Part****
+So, in Django we make use of pipenv because it creates a virtual environment.
+Suppose there are two projects (A and B) we need to work on this project but on project A use 3.2 Django version and for project B use 5.0 Django version.
+So if we install Django globally than one version over writes the another.
+That's why we make use of "pipenv"
+
+->Steps
+pip install pipenv
+mkdir storefront (New Folder)
+cd storefront
+pipenv install django
+
+
