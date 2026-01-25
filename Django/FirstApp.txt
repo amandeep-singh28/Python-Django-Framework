@@ -68,3 +68,16 @@ Go to urls.py.
 ]
 
 As playground/ is already mentioned, remove it from the urls.py(playground)
+
+
+****Templates****
+Django Templates are used to return HTML pages to the client.
+render is used to render a template to the client.
+    from django.shortcuts import render
+    # Create your views here.
+    def say_hello(request):
+        return render(request, 'hello.html')
+With the help of third parameter (mapping) in render, we can return a string to the HTML page
+    return render(request, 'hello.html', {'name' : 'Amandeep'})
+In the hello.html
+    <h2>Hello {{ name }}</h2>

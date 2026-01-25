@@ -5,4 +5,6 @@ def say_hello(request):
     # Pull data from db
     # Transfrom data
     # Send emails
-    return HttpResponse("Hello World")
+    # return HttpResponse("Hello World")
+    # return render(request, 'hello.html')
+    return render(request, 'hello.html', {'name' : 'Amandeep'})
