@@ -135,3 +135,17 @@ models.Model -> It is a base class that is provided by the django. If you will n
 
 Django automatically creates primary key for every model that we create. If you want to create your own primary key:-
     sku = models.CharField(max_length = 10, primary_key = True)
+
+->Creating Choices
+It's like a dropdown
+MEMBERSHIP_BRONZE = 'B'
+MEMBERSHIP_SILVER = 'S'
+MEMBERSHIP_GOLD = 'G'
+
+MEMBERSHIP_CHOICES = [
+    (MEMBERSHIP_BRONZE, 'Bronze'),
+    (MEMBERSHIP_SILVER, 'Silver'),
+    (MEMBERSHIP_GOLD, 'Gold')
+]
+membership = models.CharField(max_length = 1, choices = MEMBERSHIP_CHOICES, default = MEMBERSHIP_BRONZE)
+
