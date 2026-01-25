@@ -104,3 +104,21 @@ Like this you can debug your Applications.
 Always remove your breakpoints after debugging the code
 
 
+****Django Debug Tool-Bar****
+pipenv install django-debug-toolbar
+After doing this, go to Settings.py and add under INSTALLED APPS 'debug_toolbar'    
+Add this into the urls.py(storefront) path('__debug__/', include(debug_toolbar.urls))
+Add this into MIDDLEWARE(settings.py) "debug_toolbar.middleware.DebugToolbarMiddleware"
+Add this INTERNAL IPs:-(Paste it anywhere in the settings.py file)
+    INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
+
+****NOTE****
+It will only works with proper HTML page.
+That's why it is not showing a toolbar because we have only this in out html file
+    <h1>Hello World</h1>
+    <h2>Hello {{ name }}</h2>
+
