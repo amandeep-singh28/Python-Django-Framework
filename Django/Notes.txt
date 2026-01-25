@@ -25,4 +25,19 @@ mkdir storefront (New Folder)
 cd storefront
 pipenv install django
 
+->Fundamental Concepts of a web application
+Suppose we are going to build a online store and publish it on some website(abc.com).
+Now this website is going to have two parts:- Frontend and Backend.
+Frontend is the part that is loaded inside a web browser on a client machine, it is the part that user see and interacts with it.
+Backend is the part that runs on web server and it is responsible for data preprocessing, validating business rule and more.
+Now, suppose i have searched for a website(abc.com), so the browser sends a request to the web server that hosts our website and says "Hey aman wants to see the home page of abc.com", so the web server take this request, process it and return a response back to the client.
+This data exchange is defined by a protocoal called HTTP(Hyper Text Transfer Protocol), It defines how client and server can communicate.
+As the person will navigate the website. For each page browser sends an HTTP request to the server and receives an HTTP response.
 
+Now as part of building the backend for this website we need to decide how we are going to respond to clients.
+(i)To generate the requested page on the server and return it to the client, we use HTML for that.
+(ii)The other option is to return only thr data needed on the requested page and have the client generate the page, so instead of putting a complete HTML doc in an HTTP response, we only return the data like list of products.
+
+Now what is the difference, if we push this responsibility to the client, we can free up the server so it can serve more clients. Our application will be more scalable.
+
+So over the years "SECOND APPROACH" has become more trendy and is now considered as the industry best practice.
