@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     # Deleted the session app
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'playground'
 ]
 
 MIDDLEWARE = [
