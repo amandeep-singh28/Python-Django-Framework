@@ -60,3 +60,20 @@ In technical terms we say the server provides an API(Application programming int
 Focus will be on using Django to build an API for our online store client application can use this API to get or save the data.
 How these clients are built is irrelevant, here we can use REACT, ANGULAR or even plain JAVASCRIPT which follows under FRONT END DEVELOPMENT which has nothing to do with Django.
 Once we build this API, if you know front end development you can always build a client app that talks to this API
+
+****PipFile****
+Pipfile defines the project’s runtime and development requirements, including Python version and package dependencies.
+
+****Activating the virtual environment****
+Now for activating the virtual environment, we will use the python interpreter inside this virtual environment not the one that is installed globally on this machine.
+
+pipenv shell
+django-admin -> It is used to create and manage Django projects
+cd storefront
+django-admin startproject storefront 
+
+It will create another directory inside the main directory which will be core of our main application.
+
+django-admin startproject storefront . (Use this command) -> It will note create a extra new folder.
+
+
