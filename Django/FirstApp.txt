@@ -26,3 +26,45 @@ When we create app, every app has the exact same structure.
 ****Register for the app****
 Everytime, you create a new app, you have to register it on the settings.py file.
 Just add the name under INSTALLED APPS 'playground'
+
+
+****What are views(views.py)****
+HTTP is a request response protocol. So every data exchange involves a request and a response. This is where we use VIEWS in Django.
+
+In the views.py, we create view function -> Which takes a request and give a response.
+It is a request handler.
+
+->Creating our first view function
+Go to your app -> views.py
+    from django.http import HttpResponse
+    def say_hello(request):
+        return HttpResponse("Hello World")
+
+NOTE:-After creating view, we need to map the view to the URL, so when we get a request at that url, this function will be called.
+
+Add a new file in playground named it as urls.py
+In this module we are going to map our views
+Every app has its own url configuration.
+
+    from django.urls import path
+    from . import views
+
+    # URL Configuration module
+    urlpatterns = [ # urlpatterns must stay as it is, because Django looks for this only
+        path('playground/hello/', views.say_hello)
+    ]
+views.say_hello -> It means we are not calling it, we are doing it via reference
+
+
+
+After doing this, we are goiing to import this URL CONFIGURATION to the main URL CONFIGURATION.
+Go to urls.py.
+    from django.contrib import admin
+    from django.urls import path, include
+
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('playground/', include('playground.urls')) # This means that any URL which will be start from playground/ do that task only
+]
+
+As playground/ is already mentioned, remove it from the urls.py(playground)
