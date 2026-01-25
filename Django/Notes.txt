@@ -76,4 +76,24 @@ It will create another directory inside the main directory which will be core of
 
 django-admin startproject storefront . (Use this command) -> It will note create a extra new folder.
 
+****Project Structure****
+(i)__init__.py
+It defines this directory has a package
+(ii)settings.py
+Where we define application settings 
+(iii)urls.py
+Where we define the url of our applications
+(iv)asgi.py asnd wsgi.py
+These are the modules which are used for the deployment
+(v)manage.py (It internally calls django-admin, It knows which project it belongs to)
+This is a wrapper around the django admin. So going forward instead of using django admin, we are going to use manage.py as command. The reason for this is that manage.py takes the setting of this project into account.
+(Use django-admin to create a project, then use manage.py to run and manage that project.)
+For example:
+django-admin runserver (It will give error)
+python manage.py runserver (It will run properly) (By default it will take port 8000)
+python manage.py runserver 9000 (For changing the port, if application is running on another port than we need to change it explicitly)
+
+****Steps****
+pipenv shell (For activating the virtual env)
+python manage.py runserver
 
