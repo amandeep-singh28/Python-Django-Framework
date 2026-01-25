@@ -23,3 +23,6 @@ When we create app, every app has the exact same structure.
 (v)tests module -> For unit tests
 (vi)views module -> request handler
 
+****Register for the app****
+Everytime, you create a new app, you have to register it on the settings.py file.
+Just add the name under INSTALLED APPS 'playground'
