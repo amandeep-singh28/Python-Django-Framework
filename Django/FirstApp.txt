@@ -81,3 +81,26 @@ With the help of third parameter (mapping) in render, we can return a string to 
     return render(request, 'hello.html', {'name' : 'Amandeep'})
 In the hello.html
     <h2>Hello {{ name }}</h2>
+
+
+****Debugging Django Applications in VSCode****
+This is useful when our output doesn't matches with the desired output. We can check line by line and see where exactly things are going wrong.
+Click on Run & Debug, Create a launch .json file, Select Django.
+
+Open Json file, you will see a dictionary in which configurations are stored
+In the args, it is responsible on which port your server will be running, ADD one more port "9000" because on 8000 our previous server is running.
+
+Now go to the Run & debug, add some dummy code in views.py 
+def say_hello(request):
+    x = 1
+    y = 2
+    return render(request, 'hello.html', {'name' : 'Amandeep'})
+And add a breakpoint at x = 1, this will run the code before x = 1
+Now START DEBUGGING, you will see that port number is changed and when you open that link, nothing will be shown because breakpoint is added.
+Press f10 to go the next line.
+Like this you can debug your Applications.
+
+****NOTE****
+Always remove your breakpoints after debugging the code
+
+
