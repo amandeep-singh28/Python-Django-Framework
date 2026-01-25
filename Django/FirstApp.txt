@@ -122,3 +122,16 @@ That's why it is not showing a toolbar because we have only this in out html fil
     <h1>Hello World</h1>
     <h2>Hello {{ name }}</h2>
 
+****Models****
+python manage.py startapp store
+python manage.py startapp tags
+
+Created these two apps, store them in the settings.py file
+
+->Creating Models
+Go to store app and open models.py. Create two model classes Product and Customer.
+
+models.Model -> It is a base class that is provided by the django. If you will not inherit it than you will not be able to create database table.
+
+Django automatically creates primary key for every model that we create. If you want to create your own primary key:-
+    sku = models.CharField(max_length = 10, primary_key = True)
