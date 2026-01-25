@@ -1,0 +1,25 @@
+*****Creating our first app****
+Every django project is a collection of apps.
+Check on settings.py, you will see some installed apps.
+These apps are by default installed.
+INSTALLED_APPS = [
+    'django.contrib.admin', -> Admin interface
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions', 
+    'django.contrib.messages', -> Displays one time notification to the user
+    'django.contrib.staticfiles', -> For serving static files like images, CSS files
+]
+session -> It is a temporary memory on the server for managing users data. So in these days we don't use this. Remove it
+Each app provides a certain functionality.
+
+****How to create own app****
+python manage.py startapp <name of app> (playground)
+When we create app, every app has the exact same structure.
+(i)migrations -> For creating the database tables
+(ii)admin module -> How admin interface will be working
+(iii)apps module -> Where we configure the apps
+(iv)models module -> Where we define model classes for this app, we use this to pull out data from the database and present it to the user
+(v)tests module -> For unit tests
+(vi)views module -> request handler
+
