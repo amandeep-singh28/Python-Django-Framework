@@ -184,3 +184,28 @@ Created a new model Promotion.
 
 promotions = models.ManyToManyField(Promotion)
 
+->Resolving Circular dependency
+It happens when two classes depend on each other at the same time.
+In Django, this happens at class definition time because Python executes code top-down.
+Product class is going to dependent on the Collection class and at the same time Collection class is going to dependent on the Product class.
+
+As in the Product class, the relationship is already defined between the Collection class (One-to-many)(Product class -> Collection class). 
+Now if we try to implement a new relationship from Collection class -> Product class, we will not be able to create it because of CIRCULAR DEPENDENCY(Iska mtlb ye h ki, jo humari COLLECTION class vo access nhi krpaegi PRODUCT class ko, kyuki COLLECTION class os se phele define hai, toh hum PRODUCT class ko access nhi krpaenge).
+
+    class Collection(models.Model):
+        featured_product = models.ForeignKey(Product, on_delete = models.SET_NULL, null = True)
+
+    class Product(models.Model):
+        collection = models.ForeignKey(Collection, on_delete = models.PROTECT) # From here, Collection is accessible, because it is defined above but we cannot access Product class in the Collection class.
+
+****SOLUTION FOR THIS****
+We have to wrap the PRODUCT class in quotes.
+    featured_product = models.ForeignKey('Product', on_delete = models.SET_NULL, null = True)
+
+But this introduces a new problem, if tomorrow we decided to rename the PRODUCT class, it will not get reflected in the "featured_product" relationship. But this works.
+
+Now you will encounter another problem which is "REVERSE RELATIONSHIP", as collection relationship is already defined in the PRODUCT class, so Django automatically creates reverse relationship for this. But for the featured_product relationship it will also try to create the reverse relationship but it will not be able to create it because of name clash.
+To solve this problem, there are two approaches either rename the name or don't create the reverse relationship for the featured_product:
+    (i)featured_product = models.ForeignKey('Product', on_delete = models.SET_NULL, null = True, related_name = 'Product1')
+    (ii)featured_product = models.ForeignKey('Product', on_delete = models.SET_NULL, null = True, related_name = '+')
+
