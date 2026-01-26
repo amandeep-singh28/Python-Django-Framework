@@ -1,6 +1,10 @@
 from django.db import models
 
 # Create your models here.
+class Promotion(models.Model):
+    description = models.CharField(max_length = 255)
+    discount = models.FloatField()
+
 class Collection(models.Model):
     title = models.CharField(max_length = 255)
 
@@ -15,6 +19,7 @@ class Product(models.Model): # Base class which is used for making database tabl
     last_update = models.DateTimeField(auto_now = True) # Everytime we update a new product, Django will automatically stores the current datetime in this field (auto_now = True)
     # auto_now_add = True, It only stores when we create the product object first time
     collection = models.ForeignKey(Collection, on_delete = models.PROTECT) # Because if by mistake collection is deleted, so we might not end up deleting PRODUCTS too
+    promotions = models.ManyToManyField(Promotion)
 
 class Customer(models.Model):
     MEMBERSHIP_BRONZE = 'B'
@@ -67,4 +72,3 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete = models.CASCADE)
     product = models.ForeignKey(Product, on_delete = models.CASCADE)
     quantity = models.PositiveSmallIntegerField()
-    
