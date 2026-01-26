@@ -177,3 +177,10 @@ Customer - Order
 Order - Item
 Cart - Item
 
+->Defining Many-to-many relationship
+
+Promotion - Product
+Created a new model Promotion.
+
+promotions = models.ManyToManyField(Promotion)
+
