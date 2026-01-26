@@ -161,3 +161,19 @@ class Address(models.Model):
 (iii)models.SET_DEFAULT -> When we delete CUSTOMER, its value will be set to some default value while child value will be as it is. (****NOTE**** -> It will only work if the field has a default value defined)
 (iv)models.PROTECT -> It protects deletion(Firstly we have to delete the child and then parent).
 
+->Defining One-to-many relationship
+Suppose a customer can have same address.
+Use ForeignKey and remove the attribute primary_key = True.
+
+class Address(models.Model):
+    street = models.CharField(max_length = 255)
+    city = models.CharField(max_length = 255)
+    customer = models.ForeignKey(Customer, on_delete = models.CASCADE)
+
+
+****Define One-to-many relationship for this now****
+Collection - Product
+Customer - Order
+Order - Item
+Cart - Item
+
