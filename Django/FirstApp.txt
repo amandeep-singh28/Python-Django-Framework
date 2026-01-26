@@ -149,3 +149,15 @@ MEMBERSHIP_CHOICES = [
 ]
 membership = models.CharField(max_length = 1, choices = MEMBERSHIP_CHOICES, default = MEMBERSHIP_BRONZE)
 
+->Defining One-to-one relationship
+
+class Address(models.Model):
+    street = models.CharField(max_length = 255)
+    city = models.CharField(max_length = 255)
+    customer = models.OneToOneField(Customer, on_delete = models.CASCADE)
+
+(i)models.CASCADE -> It means that when we delete a customer the associate Address will also get deleted.
+(ii)models.SET_NULL -> The child database will stay in the database while the customer will set to NULL.
+(iii)models.SET_DEFAULT -> When we delete CUSTOMER, its value will be set to some default value while child value will be as it is. (****NOTE**** -> It will only work if the field has a default value defined)
+(iv)models.PROTECT -> It protects deletion(Firstly we have to delete the child and then parent).
+
