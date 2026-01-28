@@ -299,3 +299,11 @@ For example:- In 0002*** migration file:
                     ("store", "0001_initial"),
                     ]
             If you will change the file name of 0001_initial to something else, than you must update it in the 0002 migration file.
+
+****What is Slug??****
+Introduced a slug field in the PRODUCT class, for better search engine optimation of our products.
+
+It only contains letters, numbers, underscores and hyphens. It is a search engine optimation technique.
+For example:- At a particular web page there is a title ""Django for Beginners!", so slug form will be "django-for-beginners" and its url "/products/django-for-beginners/"
+
+
