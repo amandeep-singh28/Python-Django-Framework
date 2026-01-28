@@ -12,6 +12,9 @@ class Collection(models.Model):
 class Product(models.Model): # Base class which is used for making database table (models.Model)
     title = models.CharField(max_length = 255)
     description = models.TextField()
+    # slug = models.SlugField(default = '-')
+    # slug = models.SlugField(null = True) 
+    slug = models.SlugField() 
 
     #9999.99 -> Max price 
     unit_price = models.DecimalField(max_digits = 6, decimal_places = 2) # These two parameters are always required for the decimal field
