@@ -209,3 +209,50 @@ To solve this problem, there are two approaches either rename the name or don't 
     (i)featured_product = models.ForeignKey('Product', on_delete = models.SET_NULL, null = True, related_name = 'Product1')
     (ii)featured_product = models.ForeignKey('Product', on_delete = models.SET_NULL, null = True, related_name = '+')
 
+
+->Generic Relationship
+Create two models in Tags app.
+    class Tag(models.Model):
+        label = models.CharField(max_length = 255)
+
+    class  TaggedItem(models.Model):
+        tag = models.ForeignKey(Tag, on_delete = models.CASCADE)
+        # Now we need to identify on which object this tag is applied to
+
+As in our APP, there is only one model in the STORE app which is PRODUCT, we can link our tag to product only by importing the product model. 
+
+    from django.db import models
+    from store.models import Product # IMPORTED
+
+    # Create your models here.
+    class Tag(models.Model):
+        label = models.CharField(max_length = 255)
+
+    class  TaggedItem(models.Model):
+        tag = models.ForeignKey(Tag, on_delete = models.CASCADE)
+        # Now we need to identify on which object this tag is applied to
+        product = models.ForeignKey(Product)
+
+But what if there are many other objects like ARTICLES, VIDEOS?????
+So, we need a generic way to identify objects.
+
+****SOLUTION****
+We need two informations:-
+    (i)Type of an object (Product, Video, Article)
+    (ii)ID of that object
+With these two information we can identify any objects in our application.
+
+content_type  → which model (Product, Article, Video)
+object_id     → which row in that model
+
+Use "ContentType", using content type we can create generic relationships between our models. It represents the type of an obejct in our application.
+
+    from django.contrib.contenttypes.models import ContentType
+    content_type = models.ForeignKey(ContentType, on_delete = models.CASCADE) # TYPE OF OBJECT
+
+    object_id = models.PositiveIntegerField() # ID
+    
+    from django.contrib.contenttypes.fields import GenericForeignKey
+    content_object = GenericForeignKey() # Actual object
+
+
