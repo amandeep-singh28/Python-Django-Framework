@@ -274,3 +274,28 @@ class LikedItem(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete = models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey()
+
+
+-> Migrations
+Migrations are Django’s way of tracking and applying changes to the database schema.
+Models describe the data, migrations apply the changes, database stores it.
+
+****Why Migration is required****
+Because database don't change automatically, if we change something in our model, it will not reflect in the database.
+Its like updating the database when something got changed in the models.
+
+****Working****
+python manage.py makemigrations
+It will look at all the installed apps in our project, for each app it will create a new migration file.
+
+Suppose we want to quickly jump onto at some class, use CTRL + T and search it there.
+
+Search PRODUCT and go to the product model, change the name for price -> unit_price by pressing f2. Run "makemigrations" one more time. You will see that it will ask you that "have you changed the column name price to unit_price", if you press "y" than another migration file will be created.
+
+****Note****
+If you change the file name for the migration file, than you must update it in another file also.
+For example:- In 0002*** migration file:
+                    dependencies = [
+                    ("store", "0001_initial"),
+                    ]
+            If you will change the file name of 0001_initial to something else, than you must update it in the 0002 migration file.
