@@ -14,7 +14,7 @@ class Product(models.Model): # Base class which is used for making database tabl
     description = models.TextField()
 
     #9999.99 -> Max price 
-    price = models.DecimalField(max_digits = 6, decimal_places = 2) # These two parameters are always required for the decimal field
+    unit_price = models.DecimalField(max_digits = 6, decimal_places = 2) # These two parameters are always required for the decimal field
 
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now = True) # Everytime we update a new product, Django will automatically stores the current datetime in this field (auto_now = True)
