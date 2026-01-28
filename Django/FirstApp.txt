@@ -306,4 +306,10 @@ Introduced a slug field in the PRODUCT class, for better search engine optimatio
 It only contains letters, numbers, underscores and hyphens. It is a search engine optimation technique.
 For example:- At a particular web page there is a title ""Django for Beginners!", so slug form will be "django-for-beginners" and its url "/products/django-for-beginners/"
 
+If you will add a slug field in the PRODUCT class and than you will try to run the "migration", than it will not do it, it will ask you for two choice (i)Fill a default value (ii)Exit. If you want to manually fix it than use this:
+    # slug = models.SlugField(default = '-')
+    # slug = models.SlugField(null = True)
+If don't than proceed with the option 1.
+
+You must proceed with the option1, because the default value will only be in the migration not in the main model of the PRODUCT.
 
