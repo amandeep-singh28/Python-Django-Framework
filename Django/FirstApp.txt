@@ -313,3 +313,7 @@ If don't than proceed with the option 1.
 
 You must proceed with the option1, because the default value will only be in the migration not in the main model of the PRODUCT.
 
+****How to run the migrations****
+python manage.py migrate
+It applies migrations to the database
+It applies pending migrations to the database, updating the schema to match the current Django models.
