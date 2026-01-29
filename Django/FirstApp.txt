@@ -317,3 +317,39 @@ You must proceed with the option1, because the default value will only be in the
 python manage.py migrate
 It applies migrations to the database
 It applies pending migrations to the database, updating the schema to match the current Django models.
+
+****How to view tables that we have created****
+Install extension SQLITE, and then search for SQLite: Open Database.
+You will SQLITE EXPLORER on your left pane, click onto that you will be able to see all of your tables.
+
+Inspect the migration table, you will be able to see the time also, at what time you have created the migration, what you have done.
+
+****Customizing Database Schema****
+By default, Django automatically decides:
+    table name
+    indexes
+    ordering
+But sometimes we want to customize how the database table is created, for example:
+    overwrite the default table name
+    add indexes to improve query performance
+How to do this?
+    We use model metadata.
+
+What is Meta?
+Meta is an inner class that tells Django how to treat this model, not what data it stores.
+It does NOT create fields.
+It only gives extra instructions to Django
+
+
+Go to Customer model, created a new inner class Meta in which we will store the metadata. Search django model metadata.
+    class Meta:
+        db_table = 'store_customers' # use store_customers instead to store_customer
+        indexes = [
+            models.Index(fields = ['last_name', 'first_name']) # Index helps to 
+        ]
+
+Since Meta affects the database schema, we must create and apply migrations.
+Now create the migration(python manage.py makemigrations) and run it(python manage.py migrate).
+Check on the database explorer, you will see that store_customer is renamed to store_customers.
+
+class Meta is used to customize how Django creates and manages the database table for a model.
