@@ -366,3 +366,31 @@ Let's say the migration we have just recently done(store_customer -> store_custo
     git reset --hard HEAD~1 (Head pointer 1 step back to the previous commit). class Meta will be removed and also the file associated with it.
 
 EXERCISE:- In the Customer class rename first_name -> given_name and then revert the changes.
+
+
+****MySQL Work****
+Before Connecting the database to django, we firstly need to create the database at MySQL Workbench.
+-- CREATE DATABASE storefront;
+
+To connect our django project to MySQL, we have to install a package called MySQL client.
+--pipenv install mysqlclient
+--mysql -u root -p (For verifying whether mysql is installed properly or not)
+
+Setting the changes for the mysql on django
+--Go to setting.py (CTRL + T) and then CTRL + SHIFT + O search for DATABASES.
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3', // Project directory / library
+    }
+}
+--Our default settings for database is linked to SQLITE, we are gonna change that
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', // That's why mysql client was installed
+        'NAME': 'storefront',
+        'HOST' : 'localhost',
+        'USER' : 'root',
+        'PASSWORD' : 'aman'
+    }
+}
