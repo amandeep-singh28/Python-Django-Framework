@@ -353,3 +353,16 @@ Now create the migration(python manage.py makemigrations) and run it(python mana
 Check on the database explorer, you will see that store_customer is renamed to store_customers.
 
 class Meta is used to customize how Django creates and manages the database table for a model.
+
+
+****How to undo the migrations(Reverting Migrations)*****
+Let's say the migration we have just recently done(store_customer -> store_customers), was done by mistake. So, we need to undo it:-
+    (i)You only want to redo the database table name (store_customers -> store_customer(Original)), Remove the db_table line from the class Meta and make a new migration and run it.
+    (ii)Now if you want to undo everything,  look at the migration folder, 0004 is the last migration that we are going to undo, so we need to downgrade the database to the previous migration which is migration 0003.
+    (If you will see the migration table, you will be able to see the 0004 migration in the table)
+    Open the terminal and type (python manage.py migrate store 0003)
+    By running this command, it will undo the changes(You can also verify this by checking the migrations table), But the migration file would be still there in our folder(0004).
+    The proper way to undo this, remove the class Meta and delete the associate migration file. Here you can use git. On the terminal window (git log --oneline), it shows all of the commits.
+    git reset --hard HEAD~1 (Head pointer 1 step back to the previous commit). class Meta will be removed and also the file associated with it.
+
+EXERCISE:- In the Customer class rename first_name -> given_name and then revert the changes.
