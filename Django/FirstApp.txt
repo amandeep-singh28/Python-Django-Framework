@@ -394,3 +394,7 @@ Setting the changes for the mysql on django
         'PASSWORD' : 'aman'
     }
 }
+
+--Check on the "runserver" whether you are getting error or not.
+--If no error than run "python manage.py migrate" (This will migrate all the database tables to your database "storefront")
+--Check on MySQL Workbench :)))
