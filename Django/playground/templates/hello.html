@@ -8,5 +8,8 @@
   <body>
     <h1>Hello World</h1>
     <h2>Hello {{ name }}</h2>
+    <ul>{% for product in products %} 
+      <li>{{ product.title }}</li> 
+    {% endfor %}</ul>
   </body>
 </html>
