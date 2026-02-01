@@ -504,3 +504,25 @@ This helps us to retrieve all of the objects.
 
 filter() never raises an exception because it always returns a QuerySet, even if it’s empty. .first() is used to extract a single object or return None.
 
+
+****Filtering the data(queryset api)****
+->Lookup Types for numbers
+
+--If you want to find the data where unit_price = 20
+product = Product.objects.filter(unit_price = 20);
+--Now, if unit_price > 20
+product = Product.objects.filter(unit_price > 20);
+This will not work because unit_price > 20 will return a boolean value.
+--To solve this we use keyword argument
+product = Product.objects.filter(unit_price__gt = 20);
+--range()
+    queryset = Product.objects.filter(unit_price__range =(600.00, 1000.00));
+
+    return render(request, 'hello.html', {'name' : 'Amandeep', 'products' : list(queryset)})
+To display it on webpage:
+    <ul>{% for product in products %} # For loop
+      <li>{{ product.title }}</li> 
+    {% endfor %}</ul>
+--We can also filter across relationship. Suppose ee want to find all of the products in collection number 1
+    queryset = Product.objects.filter(collection__id__range = (1, 3)); # collection followed by two underscore for navigating the relationship(column name) and also we can provide lookup types.
+
