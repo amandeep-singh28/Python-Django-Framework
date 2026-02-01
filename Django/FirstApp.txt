@@ -418,3 +418,19 @@ Go to the migration file that we have created and under operations you can write
 --Now we are going to unapply the last migration to make sure our implementation was right
 --Downgrade the database (python manage.py migrate store 0003)
 --Check in MySQL, record will be gone
+
+****Generating Dummy Data****
+You can generate dummy data by using the website "mockaroo.com".
+Let's say we want to populate our custoners table.(Go to the website and add the details such as column name and type)
+(id -> Row number,
+first_name -> First Name,
+last_name -> Last Name,
+email -> Email Address,
+phone -> Phone,
+birth_date -> Datetime,
+membership -> Regular Expression -> B|S|G)
+--Choose the format SQL and download the data(1000 rows, filename -> store_customers)
+--After downloading the file, open the file in the Workbench(Open SQL Script)
+--Check your current schema, it must be store_front by using this command(SELECT DATABASE()); 
+--Select all the insert statement and RUN it.
+--Create a new file and run the query(SELECT COUNT(*) FROM store_customer), You will be able to see the count of all of your records i.e. 1000
