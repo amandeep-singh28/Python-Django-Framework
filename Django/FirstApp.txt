@@ -535,3 +535,13 @@ To display it on webpage:
     queryset = Product.objects.filter(title__istartswith = 'tea');
 --endswith (Same functionality)
 
+->Lookup types for Dates
+
+--We want to find all the products that were updated in 2026
+    queryset = Product.objects.filter(last_update__year = 2026);
+We can extract individual components in a date like year month minute second and so on.
+
+--Chceking for null. To get all the products without a description
+    queryset = Product.objects.filter(description__isnull = True );
+
+
