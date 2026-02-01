@@ -398,3 +398,7 @@ Setting the changes for the mysql on django
 --Check on the "runserver" whether you are getting error or not.
 --If no error than run "python manage.py migrate" (This will migrate all the database tables to your database "storefront")
 --Check on MySQL Workbench :)))
+
+****Running Custom SQL****
+Sometimes we need full control over genrating or updating the database schema, this is really easy with django. ALl we have to do is create an emoty migration and there we can write any arbitrary SQL code.
+-- python manage.py makemigrations store --empty
