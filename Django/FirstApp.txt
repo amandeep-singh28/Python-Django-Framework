@@ -526,3 +526,12 @@ To display it on webpage:
 --We can also filter across relationship. Suppose ee want to find all of the products in collection number 1
     queryset = Product.objects.filter(collection__id__range = (1, 3)); # collection followed by two underscore for navigating the relationship(column name) and also we can provide lookup types.
 
+->Lookup types for Strings
+
+--Product that contains coffee in their title
+    queryset = Product.objects.filter(title__icontains = 'coffee');
+    -- contains -> It is a case sensitive function, so to perform case insensitive search we write "i".
+--startswith (Same functionality)
+    queryset = Product.objects.filter(title__istartswith = 'tea');
+--endswith (Same functionality)
+
