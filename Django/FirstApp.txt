@@ -434,3 +434,23 @@ membership -> Regular Expression -> B|S|G)
 --Check your current schema, it must be store_front by using this command(SELECT DATABASE()); 
 --Select all the insert statement and RUN it.
 --Create a new file and run the query(SELECT COUNT(*) FROM store_customer), You will be able to see the count of all of your records i.e. 1000
+
+
+****DJANGO ORM(Object Relational Mapper)****
+In relational databases data is stored as rows in tables so when pulling up data from a relational database, we need to map these rows into objects in the past we used to do this by hand and this was pretty repettitive and time cosuming. So we would have to write a SQL query send it to the database read the result and map it to a bunch of objects.
+    ql = "SELECT * FROM product'
+    result = execute(sql)
+    for row in result:
+        product = Product()
+        product.title = row['title']
+        produce.price = row['price']
+So for each record you have to create a new object and set its attributes this is where an OBJECT RELATIONAL MAPPER comes into the picture.
+An ORM, it maps the objects to relational records and that frees us from writing a lot of repettitive code. Using ORM we don't have to write SQL code(sql = 'Select * FROM product') to query or manipulate data, we can code in an OOP language like python. The ORM will then translate our python code into SQL code at runtime. So does it mean we never need to write SQL "NO".
+
+--Advantages of using ORMs
+(i)Reduce complexity in our code.
+(ii)Make the code more understandable.
+(iii)Help us get more done in less time
+
+--Example:- Migrations (We have generated our database tables almost instantly, Migrations are part of our DJANGO ORM)
+All of the models that we have generated inherit Model class which is also part of Django ORM.
