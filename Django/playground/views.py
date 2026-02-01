@@ -4,6 +4,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from store.models import Product
 
 def say_hello(request):
-    queryset = Product.objects.filter(collection__id__range = (1, 3));
+    queryset = Product.objects.filter(description__isnull = True );
 
     return render(request, 'hello.html', {'name' : 'Amandeep', 'products' : list(queryset)})
