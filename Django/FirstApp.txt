@@ -402,3 +402,19 @@ Setting the changes for the mysql on django
 ****Running Custom SQL****
 Sometimes we need full control over genrating or updating the database schema, this is really easy with django. ALl we have to do is create an emoty migration and there we can write any arbitrary SQL code.
 -- python manage.py makemigrations store --empty
+
+Go to the migration file that we have created and under operations you can write your SQL code(UPGRADING DATABASE, DOWNGRADING DATABASE)
+    operations = [
+        migrations.RunSQL("""
+            INSERT INTO store_collection (title)
+            VALUES ('collection1')
+        """, """
+            DELETE FROM store_collection
+            WHERE title = 'collection1'
+        """)
+    ]
+--Apply the migration (python manage.py migrate)
+--Check on MySQL inside the store_collection, a title will be added.
+--Now we are going to unapply the last migration to make sure our implementation was right
+--Downgrade the database (python manage.py migrate store 0003)
+--Check in MySQL, record will be gone
