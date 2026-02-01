@@ -459,3 +459,27 @@ All of the models that we have generated inherit Model class which is also part 
 --Deleted the storefront database.
 --Created again the storefront database and added the migrations to the database(python manage.py migrate)
 --Exploded the seed.sql data into the tables.
+
+
+****Managers and QuerySets****
+To understand the concept of Django ORM, firstly you need to learn about managers and QuerySets.
+In the vies.py file:-
+--from store.models import Product (Imported Product)
+--In django there is an attribute called "objects" and this returns a manager object. A manager is an interface to the database.(Like a remote control with lot of buttons that we can use to talk to our database).
+--In this we have bunch of methods for querying or updating the data
+    Product.objects.all() # For pulling out all the objects in the products table
+    Product.objects.get() # For getting a single object
+    Product.objects.filter() # For filtering the data
+--There are two Scenairos:- It returns a query set, so need to iterate over it.
+    query_set = Product.objects.all()
+    for data in query_set:
+        print(data)
+    Check it on the server, and using the debug toolbar click on SQL you can see query that django has sended to the database.
+--When we convert it to a list
+    list(query_set)
+    This query set will be evaluated.
+--When we access individual element/ we slice it
+    query_set[0:5]
+
+--We say that query sets are lazy which means they are evaluated at a later point.
+Why don't django calls the database the moment we call the "all" method because with the help of query_set we can code complex queries
