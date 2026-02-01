@@ -454,3 +454,8 @@ An ORM, it maps the objects to relational records and that frees us from writing
 
 --Example:- Migrations (We have generated our database tables almost instantly, Migrations are part of our DJANGO ORM)
 All of the models that we have generated inherit Model class which is also part of Django ORM.
+
+****Resetting the Database****
+--Deleted the storefront database.
+--Created again the storefront database and added the migrations to the database(python manage.py migrate)
+--Exploded the seed.sql data into the tables.
