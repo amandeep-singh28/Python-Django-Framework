@@ -483,3 +483,24 @@ In the vies.py file:-
 
 --We say that query sets are lazy which means they are evaluated at a later point.
 Why don't django calls the database the moment we call the "all" method because with the help of query_set we can code complex queries
+
+****Retrieving Objects****
+(i)querset = Product.objects.all()
+This helps us to retrieve all of the objects.
+(ii)For getting only a single object, we use Get method
+    queryset = Product.objects.get(id = 1)
+    queryset = Product.objects.get(pk = 1) # Django will automatically translate it to primary key
+--If the id does not exist than the get() throws an exception, to solve this use try-catch block
+    from django.core.exceptions import ObjectDoesNotExist
+    try:
+        product = Product.objects.get(pk = 0);
+    except ObjectDoesNotExist: # or write -> Exception
+        pass
+--If we will use get() with try catch block it looks soemwhat ugly. The other method is to use filter()
+    product = Product.objects.filter(pk = 0).first();
+--first(), it returns None. So, we will not get error.
+--Sometimes, we need to check the existence of the object, we use filter() with exists() which returns a boolean value
+    product = Product.objects.filter(pk = 0).exists();
+
+filter() never raises an exception because it always returns a QuerySet, even if it’s empty. .first() is used to extract a single object or return None.
+
