@@ -561,4 +561,14 @@ Instead of passing keyword argument we pass Q object
 We can also write AND statement using Q objects
     queryset = Product.objects.filter(Q(inventory__lt = 100) & ~Q(unit_price__lt = 700.00))
 
+****Referencing Fields using F Objects****
+--Sometimes when filtering the data, we need to reference a particular field.
+--We want to find all the products where their inventory equals their unit price
+--We want to compare two filters.
+    queryset = Product.objects.filter(inventory = uni_price)
+--This will give error because we don't know where is uni_price defined
+To solve this problem we are going to use F Objects
+    queryset = Product.objects.filter(inventory = F('unit_price'))
+--We can also reference field in a related table
+    queryset = Product.objects.filter(inventory = F('collection__id'))
 
