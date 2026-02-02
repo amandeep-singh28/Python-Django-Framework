@@ -544,4 +544,21 @@ We can extract individual components in a date like year month minute second and
 --Chceking for null. To get all the products without a description
     queryset = Product.objects.filter(description__isnull = True );
 
+****How to apply Multiple Filters || Complex Lookups Using Q Objects****
+We want to find all the products with inventory less than 100 and unit_price less than 700.00.
+(i)Passing Multiple Keyword arguments
+    queryset = Product.objects.filter(inventory__lt = 100, unit_price__lt = 700.00);
+
+(ii)Chaining with the filter method
+    filter() -> It returns a query set
+    queryset = Product.objects.filter(inventory__lt = 100).filter(unit_price__lt = 700.00);
+These conditions are combining together as AND operator.
+
+To use OR operator, we have to use Q objects
+    from django.db.models import Q # Q means query(It returns query expression or a piece of code that produce a value)
+Instead of passing keyword argument we pass Q object
+    queryset = Product.objects.filter(Q(inventory__lt = 100) | Q(unit_price__lt = 700.00))
+We can also write AND statement using Q objects
+    queryset = Product.objects.filter(Q(inventory__lt = 100) & ~Q(unit_price__lt = 700.00))
+
 
