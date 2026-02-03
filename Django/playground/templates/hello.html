@@ -9,7 +9,7 @@
     <h1>Hello World</h1>
     <h2>Hello {{ name }}</h2>
     <ul>{% for product in products %} 
-      <li>{{ product.title }}</li> 
+      <li>{{ product.title }} ${{ product.unit_price }}</li> 
     {% endfor %}</ul>
   </body>
 </html>
