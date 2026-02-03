@@ -606,3 +606,27 @@ To solve this we use Python's array slicing syntax.
 --queryset =Product.objects.all()[:5] # 0, 1, 2, 3, 4
 --queryset =Product.objects.all()[5:10] # 5, 6, 7, 8, 9
 
+****Selecting Fields to Query****
+.values() helps us to read only specific columns
+--queryset =Product.objects.values('id', 'title')
+
+--We can also access related field
+    queryset =Product.objects.values('id', 'title', "collection__title")
+    queryset =Product.objects.values('id', 'title', "collection__title", "collection__id")
+
+--If we will print whole product
+    queryset =Product.objects.values('id', 'title', "collection__title")
+    <ul>{% for product in products %} 
+      <li>{{ product }}</li> 
+    {% endfor %}</ul>
+Than it will return as dictionary
+
+--.values_list()
+--Use this, you will get record as a tuple instead of dictionaries
+    queryset =Product.objects.values_list('id', 'title', "collection__title")
+
+--Select products that have been ordered and sort them by title
+    queryset = OrderItem.objects.values('product__id').distinct()
+    queryset_ans = Product.objects.filter(id__in = queryset).order_by('title')
+
+
