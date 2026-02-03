@@ -5,8 +5,7 @@ from django.db.models import Q, F # Q means query(It returns query expression or
 from store.models import Product, OrderItem
 
 def say_hello(request):
-    # queryset = Product.objects.values('id', 'title')
-    queryset = Product.objects.only('id', 'title')
+    queryset = Product.objects.defer("description")
 
 
     return render(request, 'hello.html', {'name' : 'Amandeep', 'products' : list(queryset)})

@@ -637,4 +637,8 @@ Than it will return as dictionary
 --Suppose this is our queryset:-
     queryset = Product.objects.only('id', 'title')
     -- But on our html page we want to load (product.title and product.unit_price). This would take time because instead of checking 1 query it will run n queries because .only() return object. That's why it is slower than .values()
-    
+
+--We have another method which is opposite of the .only() method which is "DEFER". With this method we can defer the loading of certain fields to later.
+--Suppose we are interested in all of the fields except "description" in our product table. So, we can defer it.
+    queryset = Product.objects.defer("description")
+    --But if we will print the "description" again than the behaviour will be same as ".only()" function.
