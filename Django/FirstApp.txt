@@ -599,3 +599,10 @@ But this will return an object not query set.
 --latest() -> It sorts the order in descending order and than returns the first element(Object return)
     product = Product.objects.latest('unit_price')
 
+****Limiting Results****
+We have a list of 100 products now quite often we don't want to show all these products to the user in one list, we want to show pages of products.
+Let's say our page size is 5.
+To solve this we use Python's array slicing syntax.
+--queryset =Product.objects.all()[:5] # 0, 1, 2, 3, 4
+--queryset =Product.objects.all()[5:10] # 5, 6, 7, 8, 9
+
