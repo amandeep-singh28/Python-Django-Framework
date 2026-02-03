@@ -630,3 +630,11 @@ Than it will return as dictionary
     queryset_ans = Product.objects.filter(id__in = queryset).order_by('title')
 
 
+****Deferring Fields****
+--We have another methd "only" through which we can specify the fields that we want to read from the database.
+--It is similar to .values(), but .values() return dictionary and .only() returns objects.
+--It is slower than .values()
+--Suppose this is our queryset:-
+    queryset = Product.objects.only('id', 'title')
+    -- But on our html page we want to load (product.title and product.unit_price). This would take time because instead of checking 1 query it will run n queries because .only() return object. That's why it is slower than .values()
+    
