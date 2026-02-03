@@ -572,3 +572,30 @@ To solve this problem we are going to use F Objects
 --We can also reference field in a related table
     queryset = Product.objects.filter(inventory = F('collection__id'))
 
+
+****Sorting the data****
+--Ascending order
+queryset = Product.objects.order_by('title')
+
+--Descending order
+queryset = Product.objects.order_by('-title')
+
+--Multiple columns (First do the sorting on the basis of unit_price in ASC order and than do the sorting in DESC order on the basis of title)
+queryset = Product.objects.order_by('unit_price','-title')
+
+--Reverse(unit_price DESC order and title ASC order)
+queryset = Product.objects.order_by('unit_price','-title').reverse()
+
+--We can use order by with filter also(Filter returns a query set and order-by is applied only on query set)
+
+--How to get an individual element using order-by
+product = Product.objects.order_by('unit_price')[0]
+But this will return an object not query set.
+    return render(request, 'hello.html', {'name' : 'Amandeep', 'product' : product})
+
+--earliest() -> It sorts the order in ascending order and than returns the first element(Object return)
+    product = Product.objects.earliest('unit_price')
+
+--latest() -> It sorts the order in descending order and than returns the first element(Object return)
+    product = Product.objects.latest('unit_price')
+
