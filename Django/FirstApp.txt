@@ -642,3 +642,19 @@ Than it will return as dictionary
 --Suppose we are interested in all of the fields except "description" in our product table. So, we can defer it.
     queryset = Product.objects.defer("description")
     --But if we will print the "description" again than the behaviour will be same as ".only()" function.
+
+****Selecting Related Objects****
+--Sometimes we need to load a bunch of objects together.
+    queryset = Product.objects.all()
+    -- Here we are loading the product database. Since product and collection are related to each other. We will do this:-
+        <li>{{ product.title }} -> {{ product.collection.title}}</li>
+    -- We are getting product title corresponding to collection title
+--We will encounter same problem that we have faced in .only(), it will take time to load the data and instead of running 1 query it will run 'n' number of queries to the database.
+--This happen because we are only loading "Product" data not the "Collection" data.
+
+****Solution****
+--Using select_related()
+ queryset = Product.objects.select_related('collection').all()
+
+****NOTE****
+We will use select_related when the other end of relationship has one instance(1){Like a product have 1 collection}.
