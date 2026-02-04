@@ -668,4 +668,14 @@ We will use select_related when the other end of relationship has one instance(1
 --GET THE LAST 5 ORDERS WITH THEIR CUSTOMER AND ITEMS (including product)
     queryset = Order.objects.select_related('customer').order_by('placed_at')[:5]
 
+****Grouping Data****
+from django.db.models.aggregates import Count, Min, Max, Sum, Avg
+result = Product.objects.aggregate(Count('id'))
+{{ result }}
+
+--It does not give a queryset
+--For changing the name:
+    result = Product.objects.aggregate(count = Count('id'))
+--We can apply multiple aggregate function
+    result = Product.objects.aggregate(count = Count('id'), min_price = (Min('unit_price')))
  
