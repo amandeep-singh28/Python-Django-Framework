@@ -658,3 +658,14 @@ Than it will return as dictionary
 
 ****NOTE****
 We will use select_related when the other end of relationship has one instance(1){Like a product have 1 collection}.
+
+****Another method****
+--There is another method which is prefetch_related(). It is used when the other end of the relationship has many objects. {Promotios of a product}
+    queryset = Product.objects.prefetch_related('promotions').all()
+
+--We want the products with their promotions and collection title
+
+--GET THE LAST 5 ORDERS WITH THEIR CUSTOMER AND ITEMS (including product)
+    queryset = Order.objects.select_related('customer').order_by('placed_at')[:5]
+
+ 
