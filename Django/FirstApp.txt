@@ -679,3 +679,14 @@ result = Product.objects.aggregate(Count('id'))
 --We can apply multiple aggregate function
     result = Product.objects.aggregate(count = Count('id'), min_price = (Min('unit_price')))
  
+
+****Annotating Objects****
+--Sometimes we want to add additional attributes to our objects while querying them, this is where we use annotate method.
+--With the help of this method, we can create new fields in our table.
+    queryset = Customer.objects.annotate(is_new = True)
+    --It means that you are creating a new column in which the values are True. But this will not work
+        from django.db.models import Value
+        queryset = Customer.objects.annotate(is_new = Value(True))
+
+--Another Example
+    queryset = Customer.objects.annotate(new_id = F('id') + 1)
