@@ -690,3 +690,19 @@ result = Product.objects.aggregate(Count('id'))
 
 --Another Example
     queryset = Customer.objects.annotate(new_id = F('id') + 1)
+
+****Calling Database Functions****
+We can use SQL functions like length, concat in this by calling the Func class because it is the base class for SQL functions in django.
+    from django.db.models import Func
+
+    queryset = Customer.objects.annotate(
+        full_name = Func(F('first_name'), Value(' '),
+                         F('last_name'), function = 'CONCAT')
+    )
+--Instead of using Func base class, we directly import the inbuilt functions like this:
+    from django.db.models.functions import Concat
+
+    queryset = Customer.objects.annotate(
+        full_name = Concat(F('first_name'), Value(' '),
+                           F('last_name'))
+    )
