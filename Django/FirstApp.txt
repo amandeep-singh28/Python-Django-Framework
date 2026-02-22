@@ -706,3 +706,13 @@ We can use SQL functions like length, concat in this by calling the Func class b
         full_name = Concat(F('first_name'), Value(' '),
                            F('last_name'))
     )
+
+****Expression Wrapper Class****
+Suppose you want to add a new column using a column in the table(unit_price). unit_price contains data in Decimal field, you want to multiply it with 0.8(FloatField), you will not able to do that because both of them have different data types. To solve this you can use Expression wrapper class.
+And you also need to specify an output_field as a parameter which means that in which datatype you need the output.
+
+from django.db.models import ExpressionWrapper, DecimalField
+queryset = Product.objects.annotate(
+        # discounted_price = ExpressionWrapper(F('unit_price') * 0.82, output_field = DecimalField())
+        discounted_price = F('unit_price') * 0.82 # Error
+    )
