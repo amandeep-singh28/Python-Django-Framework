@@ -1,0 +1,708 @@
+*****Creating our first app****
+Every django project is a collection of apps.
+Check on settings.py, you will see some installed apps.
+These apps are by default installed.
+INSTALLED_APPS = [
+    'django.contrib.admin', -> Admin interface
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions', 
+    'django.contrib.messages', -> Displays one time notification to the user
+    'django.contrib.staticfiles', -> For serving static files like images, CSS files
+]
+session -> It is a temporary memory on the server for managing users data. So in these days we don't use this. Remove it
+Each app provides a certain functionality.
+
+****How to create own app****
+python manage.py startapp <name of app> (playground)
+When we create app, every app has the exact same structure.
+(i)migrations -> For creating the database tables
+(ii)admin module -> How admin interface will be working
+(iii)apps module -> Where we configure the apps
+(iv)models module -> Where we define model classes for this app, we use this to pull out data from the database and present it to the user
+(v)tests module -> For unit tests
+(vi)views module -> request handler
+
+****Register for the app****
+Everytime, you create a new app, you have to register it on the settings.py file.
+Just add the name under INSTALLED APPS 'playground'
+
+
+****What are views(views.py)****
+HTTP is a request response protocol. So every data exchange involves a request and a response. This is where we use VIEWS in Django.
+
+In the views.py, we create view function -> Which takes a request and give a response.
+It is a request handler.
+
+->Creating our first view function
+Go to your app -> views.py
+    from django.http import HttpResponse
+    def say_hello(request):
+        return HttpResponse("Hello World")
+
+NOTE:-After creating view, we need to map the view to the URL, so when we get a request at that url, this function will be called.
+
+Add a new file in playground named it as urls.py
+In this module we are going to map our views
+Every app has its own url configuration.
+
+    from django.urls import path
+    from . import views
+
+    # URL Configuration module
+    urlpatterns = [ # urlpatterns must stay as it is, because Django looks for this only
+        path('playground/hello/', views.say_hello)
+    ]
+views.say_hello -> It means we are not calling it, we are doing it via reference
+
+
+
+After doing this, we are goiing to import this URL CONFIGURATION to the main URL CONFIGURATION.
+Go to urls.py.
+    from django.contrib import admin
+    from django.urls import path, include
+
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('playground/', include('playground.urls')) # This means that any URL which will be start from playground/ do that task only
+]
+
+As playground/ is already mentioned, remove it from the urls.py(playground)
+
+
+****Templates****
+Django Templates are used to return HTML pages to the client.
+render is used to render a template to the client.
+    from django.shortcuts import render
+    # Create your views here.
+    def say_hello(request):
+        return render(request, 'hello.html')
+With the help of third parameter (mapping) in render, we can return a string to the HTML page
+    return render(request, 'hello.html', {'name' : 'Amandeep'})
+In the hello.html
+    <h2>Hello {{ name }}</h2>
+
+
+****Debugging Django Applications in VSCode****
+This is useful when our output doesn't matches with the desired output. We can check line by line and see where exactly things are going wrong.
+Click on Run & Debug, Create a launch .json file, Select Django.
+
+Open Json file, you will see a dictionary in which configurations are stored
+In the args, it is responsible on which port your server will be running, ADD one more port "9000" because on 8000 our previous server is running.
+
+Now go to the Run & debug, add some dummy code in views.py 
+def say_hello(request):
+    x = 1
+    y = 2
+    return render(request, 'hello.html', {'name' : 'Amandeep'})
+And add a breakpoint at x = 1, this will run the code before x = 1
+Now START DEBUGGING, you will see that port number is changed and when you open that link, nothing will be shown because breakpoint is added.
+Press f10 to go the next line.
+Like this you can debug your Applications.
+
+****NOTE****
+Always remove your breakpoints after debugging the code
+
+
+****Django Debug Tool-Bar****
+pipenv install django-debug-toolbar
+After doing this, go to Settings.py and add under INSTALLED APPS 'debug_toolbar'    
+Add this into the urls.py(storefront) path('__debug__/', include(debug_toolbar.urls))
+Add this into MIDDLEWARE(settings.py) "debug_toolbar.middleware.DebugToolbarMiddleware"
+Add this INTERNAL IPs:-(Paste it anywhere in the settings.py file)
+    INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
+
+****NOTE****
+It will only works with proper HTML page.
+That's why it is not showing a toolbar because we have only this in out html file
+    <h1>Hello World</h1>
+    <h2>Hello {{ name }}</h2>
+
+****Models****
+python manage.py startapp store
+python manage.py startapp tags
+
+Created these two apps, store them in the settings.py file
+
+->Creating Models
+Go to store app and open models.py. Create two model classes Product and Customer.
+
+models.Model -> It is a base class that is provided by the django. If you will not inherit it than you will not be able to create database table.
+
+Django automatically creates primary key for every model that we create. If you want to create your own primary key:-
+    sku = models.CharField(max_length = 10, primary_key = True)
+
+->Creating Choices
+It's like a dropdown
+MEMBERSHIP_BRONZE = 'B'
+MEMBERSHIP_SILVER = 'S'
+MEMBERSHIP_GOLD = 'G'
+
+MEMBERSHIP_CHOICES = [
+    (MEMBERSHIP_BRONZE, 'Bronze'),
+    (MEMBERSHIP_SILVER, 'Silver'),
+    (MEMBERSHIP_GOLD, 'Gold')
+]
+membership = models.CharField(max_length = 1, choices = MEMBERSHIP_CHOICES, default = MEMBERSHIP_BRONZE)
+
+->Defining One-to-one relationship
+
+class Address(models.Model):
+    street = models.CharField(max_length = 255)
+    city = models.CharField(max_length = 255)
+    customer = models.OneToOneField(Customer, on_delete = models.CASCADE)
+
+(i)models.CASCADE -> It means that when we delete a customer the associate Address will also get deleted.
+(ii)models.SET_NULL -> The child database will stay in the database while the customer will set to NULL.
+(iii)models.SET_DEFAULT -> When we delete CUSTOMER, its value will be set to some default value while child value will be as it is. (****NOTE**** -> It will only work if the field has a default value defined)
+(iv)models.PROTECT -> It protects deletion(Firstly we have to delete the child and then parent).
+
+->Defining One-to-many relationship
+Suppose a customer can have same address.
+Use ForeignKey and remove the attribute primary_key = True.
+
+class Address(models.Model):
+    street = models.CharField(max_length = 255)
+    city = models.CharField(max_length = 255)
+    customer = models.ForeignKey(Customer, on_delete = models.CASCADE)
+
+
+****Define One-to-many relationship for this now****
+Collection - Product
+Customer - Order
+Order - Item
+Cart - Item
+
+->Defining Many-to-many relationship
+
+Promotion - Product
+Created a new model Promotion.
+
+promotions = models.ManyToManyField(Promotion)
+
+->Resolving Circular dependency
+It happens when two classes depend on each other at the same time.
+In Django, this happens at class definition time because Python executes code top-down.
+Product class is going to dependent on the Collection class and at the same time Collection class is going to dependent on the Product class.
+
+As in the Product class, the relationship is already defined between the Collection class (One-to-many)(Product class -> Collection class). 
+Now if we try to implement a new relationship from Collection class -> Product class, we will not be able to create it because of CIRCULAR DEPENDENCY(Iska mtlb ye h ki, jo humari COLLECTION class vo access nhi krpaegi PRODUCT class ko, kyuki COLLECTION class os se phele define hai, toh hum PRODUCT class ko access nhi krpaenge).
+
+    class Collection(models.Model):
+        featured_product = models.ForeignKey(Product, on_delete = models.SET_NULL, null = True)
+
+    class Product(models.Model):
+        collection = models.ForeignKey(Collection, on_delete = models.PROTECT) # From here, Collection is accessible, because it is defined above but we cannot access Product class in the Collection class.
+
+****SOLUTION FOR THIS****
+We have to wrap the PRODUCT class in quotes.
+    featured_product = models.ForeignKey('Product', on_delete = models.SET_NULL, null = True)
+
+But this introduces a new problem, if tomorrow we decided to rename the PRODUCT class, it will not get reflected in the "featured_product" relationship. But this works.
+
+Now you will encounter another problem which is "REVERSE RELATIONSHIP", as collection relationship is already defined in the PRODUCT class, so Django automatically creates reverse relationship for this. But for the featured_product relationship it will also try to create the reverse relationship but it will not be able to create it because of name clash.
+To solve this problem, there are two approaches either rename the name or don't create the reverse relationship for the featured_product:
+    (i)featured_product = models.ForeignKey('Product', on_delete = models.SET_NULL, null = True, related_name = 'Product1')
+    (ii)featured_product = models.ForeignKey('Product', on_delete = models.SET_NULL, null = True, related_name = '+')
+
+
+->Generic Relationship
+Create two models in Tags app.
+    class Tag(models.Model):
+        label = models.CharField(max_length = 255)
+
+    class  TaggedItem(models.Model):
+        tag = models.ForeignKey(Tag, on_delete = models.CASCADE)
+        # Now we need to identify on which object this tag is applied to
+
+As in our APP, there is only one model in the STORE app which is PRODUCT, we can link our tag to product only by importing the product model. 
+
+    from django.db import models
+    from store.models import Product # IMPORTED
+
+    # Create your models here.
+    class Tag(models.Model):
+        label = models.CharField(max_length = 255)
+
+    class  TaggedItem(models.Model):
+        tag = models.ForeignKey(Tag, on_delete = models.CASCADE)
+        # Now we need to identify on which object this tag is applied to
+        product = models.ForeignKey(Product)
+
+But what if there are many other objects like ARTICLES, VIDEOS?????
+So, we need a generic way to identify objects.
+
+****SOLUTION****
+We need two informations:-
+    (i)Type of an object (Product, Video, Article)
+    (ii)ID of that object
+With these two information we can identify any objects in our application.
+
+content_type  → which model (Product, Article, Video)
+object_id     → which row in that model
+
+Use "ContentType", using content type we can create generic relationships between our models. It represents the type of an obejct in our application.
+
+    from django.contrib.contenttypes.models import ContentType
+    content_type = models.ForeignKey(ContentType, on_delete = models.CASCADE) # TYPE OF OBJECT
+
+    object_id = models.PositiveIntegerField() # ID
+    
+    from django.contrib.contenttypes.fields import GenericForeignKey
+    content_object = GenericForeignKey() # Actual object
+
+
+->Create another app likes (python manage.py startapp likes)
+App: likes
+LikedITem
+    - what user likes what object
+    - user: ForeignKey to User (django.contrib.auth.models)
+    
+
+from django.db import models
+from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+# Create your models here.
+
+class LikedItem(models.Model):
+    user = models.ForeignKey(User, on_delete = models.CASCADE) # If a user is deleted, all objects that the user has liked will be deleted
+    content_type = models.ForeignKey(ContentType, on_delete = models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey()
+
+
+-> Migrations
+Migrations are Django’s way of tracking and applying changes to the database schema.
+Models describe the data, migrations apply the changes, database stores it.
+
+****Why Migration is required****
+Because database don't change automatically, if we change something in our model, it will not reflect in the database.
+Its like updating the database when something got changed in the models.
+
+****Working****
+python manage.py makemigrations
+It will look at all the installed apps in our project, for each app it will create a new migration file.
+
+Suppose we want to quickly jump onto at some class, use CTRL + T and search it there.
+
+Search PRODUCT and go to the product model, change the name for price -> unit_price by pressing f2. Run "makemigrations" one more time. You will see that it will ask you that "have you changed the column name price to unit_price", if you press "y" than another migration file will be created.
+
+****Note****
+If you change the file name for the migration file, than you must update it in another file also.
+For example:- In 0002*** migration file:
+                    dependencies = [
+                    ("store", "0001_initial"),
+                    ]
+            If you will change the file name of 0001_initial to something else, than you must update it in the 0002 migration file.
+
+****What is Slug??****
+Introduced a slug field in the PRODUCT class, for better search engine optimation of our products.
+
+It only contains letters, numbers, underscores and hyphens. It is a search engine optimation technique.
+For example:- At a particular web page there is a title ""Django for Beginners!", so slug form will be "django-for-beginners" and its url "/products/django-for-beginners/"
+
+If you will add a slug field in the PRODUCT class and than you will try to run the "migration", than it will not do it, it will ask you for two choice (i)Fill a default value (ii)Exit. If you want to manually fix it than use this:
+    # slug = models.SlugField(default = '-')
+    # slug = models.SlugField(null = True)
+If don't than proceed with the option 1.
+
+You must proceed with the option1, because the default value will only be in the migration not in the main model of the PRODUCT.
+
+****How to run the migrations****
+python manage.py migrate
+It applies migrations to the database
+It applies pending migrations to the database, updating the schema to match the current Django models.
+
+****How to view tables that we have created****
+Install extension SQLITE, and then search for SQLite: Open Database.
+You will SQLITE EXPLORER on your left pane, click onto that you will be able to see all of your tables.
+
+Inspect the migration table, you will be able to see the time also, at what time you have created the migration, what you have done.
+
+****Customizing Database Schema****
+By default, Django automatically decides:
+    table name
+    indexes
+    ordering
+But sometimes we want to customize how the database table is created, for example:
+    overwrite the default table name
+    add indexes to improve query performance
+How to do this?
+    We use model metadata.
+
+What is Meta?
+Meta is an inner class that tells Django how to treat this model, not what data it stores.
+It does NOT create fields.
+It only gives extra instructions to Django
+
+
+Go to Customer model, created a new inner class Meta in which we will store the metadata. Search django model metadata.
+    class Meta:
+        db_table = 'store_customers' # use store_customers instead to store_customer
+        indexes = [
+            models.Index(fields = ['last_name', 'first_name']) # Index helps to 
+        ]
+
+Since Meta affects the database schema, we must create and apply migrations.
+Now create the migration(python manage.py makemigrations) and run it(python manage.py migrate).
+Check on the database explorer, you will see that store_customer is renamed to store_customers.
+
+class Meta is used to customize how Django creates and manages the database table for a model.
+
+
+****How to undo the migrations(Reverting Migrations)*****
+Let's say the migration we have just recently done(store_customer -> store_customers), was done by mistake. So, we need to undo it:-
+    (i)You only want to redo the database table name (store_customers -> store_customer(Original)), Remove the db_table line from the class Meta and make a new migration and run it.
+    (ii)Now if you want to undo everything,  look at the migration folder, 0004 is the last migration that we are going to undo, so we need to downgrade the database to the previous migration which is migration 0003.
+    (If you will see the migration table, you will be able to see the 0004 migration in the table)
+    Open the terminal and type (python manage.py migrate store 0003)
+    By running this command, it will undo the changes(You can also verify this by checking the migrations table), But the migration file would be still there in our folder(0004).
+    The proper way to undo this, remove the class Meta and delete the associate migration file. Here you can use git. On the terminal window (git log --oneline), it shows all of the commits.
+    git reset --hard HEAD~1 (Head pointer 1 step back to the previous commit). class Meta will be removed and also the file associated with it.
+
+EXERCISE:- In the Customer class rename first_name -> given_name and then revert the changes.
+
+
+****MySQL Work****
+Before Connecting the database to django, we firstly need to create the database at MySQL Workbench.
+-- CREATE DATABASE storefront;
+
+To connect our django project to MySQL, we have to install a package called MySQL client.
+--pipenv install mysqlclient
+--mysql -u root -p (For verifying whether mysql is installed properly or not)
+
+Setting the changes for the mysql on django
+--Go to setting.py (CTRL + T) and then CTRL + SHIFT + O search for DATABASES.
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3', // Project directory / library
+    }
+}
+--Our default settings for database is linked to SQLITE, we are gonna change that
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', // That's why mysql client was installed
+        'NAME': 'storefront',
+        'HOST' : 'localhost',
+        'USER' : 'root',
+        'PASSWORD' : 'aman'
+    }
+}
+
+--Check on the "runserver" whether you are getting error or not.
+--If no error than run "python manage.py migrate" (This will migrate all the database tables to your database "storefront")
+--Check on MySQL Workbench :)))
+
+****Running Custom SQL****
+Sometimes we need full control over genrating or updating the database schema, this is really easy with django. ALl we have to do is create an emoty migration and there we can write any arbitrary SQL code.
+-- python manage.py makemigrations store --empty
+
+Go to the migration file that we have created and under operations you can write your SQL code(UPGRADING DATABASE, DOWNGRADING DATABASE)
+    operations = [
+        migrations.RunSQL("""
+            INSERT INTO store_collection (title)
+            VALUES ('collection1')
+        """, """
+            DELETE FROM store_collection
+            WHERE title = 'collection1'
+        """)
+    ]
+--Apply the migration (python manage.py migrate)
+--Check on MySQL inside the store_collection, a title will be added.
+--Now we are going to unapply the last migration to make sure our implementation was right
+--Downgrade the database (python manage.py migrate store 0003)
+--Check in MySQL, record will be gone
+
+****Generating Dummy Data****
+You can generate dummy data by using the website "mockaroo.com".
+Let's say we want to populate our custoners table.(Go to the website and add the details such as column name and type)
+(id -> Row number,
+first_name -> First Name,
+last_name -> Last Name,
+email -> Email Address,
+phone -> Phone,
+birth_date -> Datetime,
+membership -> Regular Expression -> B|S|G)
+--Choose the format SQL and download the data(1000 rows, filename -> store_customers)
+--After downloading the file, open the file in the Workbench(Open SQL Script)
+--Check your current schema, it must be store_front by using this command(SELECT DATABASE()); 
+--Select all the insert statement and RUN it.
+--Create a new file and run the query(SELECT COUNT(*) FROM store_customer), You will be able to see the count of all of your records i.e. 1000
+
+
+****DJANGO ORM(Object Relational Mapper)****
+In relational databases data is stored as rows in tables so when pulling up data from a relational database, we need to map these rows into objects in the past we used to do this by hand and this was pretty repettitive and time cosuming. So we would have to write a SQL query send it to the database read the result and map it to a bunch of objects.
+    ql = "SELECT * FROM product'
+    result = execute(sql)
+    for row in result:
+        product = Product()
+        product.title = row['title']
+        produce.price = row['price']
+So for each record you have to create a new object and set its attributes this is where an OBJECT RELATIONAL MAPPER comes into the picture.
+An ORM, it maps the objects to relational records and that frees us from writing a lot of repettitive code. Using ORM we don't have to write SQL code(sql = 'Select * FROM product') to query or manipulate data, we can code in an OOP language like python. The ORM will then translate our python code into SQL code at runtime. So does it mean we never need to write SQL "NO".
+
+--Advantages of using ORMs
+(i)Reduce complexity in our code.
+(ii)Make the code more understandable.
+(iii)Help us get more done in less time
+
+--Example:- Migrations (We have generated our database tables almost instantly, Migrations are part of our DJANGO ORM)
+All of the models that we have generated inherit Model class which is also part of Django ORM.
+
+****Resetting the Database****
+--Deleted the storefront database.
+--Created again the storefront database and added the migrations to the database(python manage.py migrate)
+--Exploded the seed.sql data into the tables.
+
+
+****Managers and QuerySets****
+To understand the concept of Django ORM, firstly you need to learn about managers and QuerySets.
+In the vies.py file:-
+--from store.models import Product (Imported Product)
+--In django there is an attribute called "objects" and this returns a manager object. A manager is an interface to the database.(Like a remote control with lot of buttons that we can use to talk to our database).
+--In this we have bunch of methods for querying or updating the data
+    Product.objects.all() # For pulling out all the objects in the products table
+    Product.objects.get() # For getting a single object
+    Product.objects.filter() # For filtering the data
+--There are two Scenairos:- It returns a query set, so need to iterate over it.
+    query_set = Product.objects.all()
+    for data in query_set:
+        print(data)
+    Check it on the server, and using the debug toolbar click on SQL you can see query that django has sended to the database.
+--When we convert it to a list
+    list(query_set)
+    This query set will be evaluated.
+--When we access individual element/ we slice it
+    query_set[0:5]
+
+--We say that query sets are lazy which means they are evaluated at a later point.
+Why don't django calls the database the moment we call the "all" method because with the help of query_set we can code complex queries
+
+****Retrieving Objects****
+(i)querset = Product.objects.all()
+This helps us to retrieve all of the objects.
+(ii)For getting only a single object, we use Get method
+    queryset = Product.objects.get(id = 1)
+    queryset = Product.objects.get(pk = 1) # Django will automatically translate it to primary key
+--If the id does not exist than the get() throws an exception, to solve this use try-catch block
+    from django.core.exceptions import ObjectDoesNotExist
+    try:
+        product = Product.objects.get(pk = 0);
+    except ObjectDoesNotExist: # or write -> Exception
+        pass
+--If we will use get() with try catch block it looks soemwhat ugly. The other method is to use filter()
+    product = Product.objects.filter(pk = 0).first();
+--first(), it returns None. So, we will not get error.
+--Sometimes, we need to check the existence of the object, we use filter() with exists() which returns a boolean value
+    product = Product.objects.filter(pk = 0).exists();
+
+filter() never raises an exception because it always returns a QuerySet, even if it’s empty. .first() is used to extract a single object or return None.
+
+
+****Filtering the data(queryset api)****
+->Lookup Types for numbers
+
+--If you want to find the data where unit_price = 20
+product = Product.objects.filter(unit_price = 20);
+--Now, if unit_price > 20
+product = Product.objects.filter(unit_price > 20);
+This will not work because unit_price > 20 will return a boolean value.
+--To solve this we use keyword argument
+product = Product.objects.filter(unit_price__gt = 20);
+--range()
+    queryset = Product.objects.filter(unit_price__range =(600.00, 1000.00));
+
+    return render(request, 'hello.html', {'name' : 'Amandeep', 'products' : list(queryset)})
+To display it on webpage:
+    <ul>{% for product in products %} # For loop
+      <li>{{ product.title }}</li> 
+    {% endfor %}</ul>
+--We can also filter across relationship. Suppose ee want to find all of the products in collection number 1
+    queryset = Product.objects.filter(collection__id__range = (1, 3)); # collection followed by two underscore for navigating the relationship(column name) and also we can provide lookup types.
+
+->Lookup types for Strings
+
+--Product that contains coffee in their title
+    queryset = Product.objects.filter(title__icontains = 'coffee');
+    -- contains -> It is a case sensitive function, so to perform case insensitive search we write "i".
+--startswith (Same functionality)
+    queryset = Product.objects.filter(title__istartswith = 'tea');
+--endswith (Same functionality)
+
+->Lookup types for Dates
+
+--We want to find all the products that were updated in 2026
+    queryset = Product.objects.filter(last_update__year = 2026);
+We can extract individual components in a date like year month minute second and so on.
+
+--Chceking for null. To get all the products without a description
+    queryset = Product.objects.filter(description__isnull = True );
+
+****How to apply Multiple Filters || Complex Lookups Using Q Objects****
+We want to find all the products with inventory less than 100 and unit_price less than 700.00.
+(i)Passing Multiple Keyword arguments
+    queryset = Product.objects.filter(inventory__lt = 100, unit_price__lt = 700.00);
+
+(ii)Chaining with the filter method
+    filter() -> It returns a query set
+    queryset = Product.objects.filter(inventory__lt = 100).filter(unit_price__lt = 700.00);
+These conditions are combining together as AND operator.
+
+To use OR operator, we have to use Q objects
+    from django.db.models import Q # Q means query(It returns query expression or a piece of code that produce a value)
+Instead of passing keyword argument we pass Q object
+    queryset = Product.objects.filter(Q(inventory__lt = 100) | Q(unit_price__lt = 700.00))
+We can also write AND statement using Q objects
+    queryset = Product.objects.filter(Q(inventory__lt = 100) & ~Q(unit_price__lt = 700.00))
+
+****Referencing Fields using F Objects****
+--Sometimes when filtering the data, we need to reference a particular field.
+--We want to find all the products where their inventory equals their unit price
+--We want to compare two filters.
+    queryset = Product.objects.filter(inventory = uni_price)
+--This will give error because we don't know where is uni_price defined
+To solve this problem we are going to use F Objects
+    queryset = Product.objects.filter(inventory = F('unit_price'))
+--We can also reference field in a related table
+    queryset = Product.objects.filter(inventory = F('collection__id'))
+
+
+****Sorting the data****
+--Ascending order
+queryset = Product.objects.order_by('title')
+
+--Descending order
+queryset = Product.objects.order_by('-title')
+
+--Multiple columns (First do the sorting on the basis of unit_price in ASC order and than do the sorting in DESC order on the basis of title)
+queryset = Product.objects.order_by('unit_price','-title')
+
+--Reverse(unit_price DESC order and title ASC order)
+queryset = Product.objects.order_by('unit_price','-title').reverse()
+
+--We can use order by with filter also(Filter returns a query set and order-by is applied only on query set)
+
+--How to get an individual element using order-by
+product = Product.objects.order_by('unit_price')[0]
+But this will return an object not query set.
+    return render(request, 'hello.html', {'name' : 'Amandeep', 'product' : product})
+
+--earliest() -> It sorts the order in ascending order and than returns the first element(Object return)
+    product = Product.objects.earliest('unit_price')
+
+--latest() -> It sorts the order in descending order and than returns the first element(Object return)
+    product = Product.objects.latest('unit_price')
+
+****Limiting Results****
+We have a list of 100 products now quite often we don't want to show all these products to the user in one list, we want to show pages of products.
+Let's say our page size is 5.
+To solve this we use Python's array slicing syntax.
+--queryset =Product.objects.all()[:5] # 0, 1, 2, 3, 4
+--queryset =Product.objects.all()[5:10] # 5, 6, 7, 8, 9
+
+****Selecting Fields to Query****
+.values() helps us to read only specific columns
+--queryset =Product.objects.values('id', 'title')
+
+--We can also access related field
+    queryset =Product.objects.values('id', 'title', "collection__title")
+    queryset =Product.objects.values('id', 'title', "collection__title", "collection__id")
+
+--If we will print whole product
+    queryset =Product.objects.values('id', 'title', "collection__title")
+    <ul>{% for product in products %} 
+      <li>{{ product }}</li> 
+    {% endfor %}</ul>
+Than it will return as dictionary
+
+--.values_list()
+--Use this, you will get record as a tuple instead of dictionaries
+    queryset =Product.objects.values_list('id', 'title', "collection__title")
+
+--Select products that have been ordered and sort them by title
+    queryset = OrderItem.objects.values('product__id').distinct()
+    queryset_ans = Product.objects.filter(id__in = queryset).order_by('title')
+
+
+****Deferring Fields****
+--We have another methd "only" through which we can specify the fields that we want to read from the database.
+--It is similar to .values(), but .values() return dictionary and .only() returns objects.
+--It is slower than .values()
+--Suppose this is our queryset:-
+    queryset = Product.objects.only('id', 'title')
+    -- But on our html page we want to load (product.title and product.unit_price). This would take time because instead of checking 1 query it will run n queries because .only() return object. That's why it is slower than .values()
+
+--We have another method which is opposite of the .only() method which is "DEFER". With this method we can defer the loading of certain fields to later.
+--Suppose we are interested in all of the fields except "description" in our product table. So, we can defer it.
+    queryset = Product.objects.defer("description")
+    --But if we will print the "description" again than the behaviour will be same as ".only()" function.
+
+****Selecting Related Objects****
+--Sometimes we need to load a bunch of objects together.
+    queryset = Product.objects.all()
+    -- Here we are loading the product database. Since product and collection are related to each other. We will do this:-
+        <li>{{ product.title }} -> {{ product.collection.title}}</li>
+    -- We are getting product title corresponding to collection title
+--We will encounter same problem that we have faced in .only(), it will take time to load the data and instead of running 1 query it will run 'n' number of queries to the database.
+--This happen because we are only loading "Product" data not the "Collection" data.
+
+****Solution****
+--Using select_related()
+ queryset = Product.objects.select_related('collection').all()
+
+****NOTE****
+We will use select_related when the other end of relationship has one instance(1){Like a product have 1 collection}.
+
+****Another method****
+--There is another method which is prefetch_related(). It is used when the other end of the relationship has many objects. {Promotios of a product}
+    queryset = Product.objects.prefetch_related('promotions').all()
+
+--We want the products with their promotions and collection title
+
+--GET THE LAST 5 ORDERS WITH THEIR CUSTOMER AND ITEMS (including product)
+    queryset = Order.objects.select_related('customer').order_by('placed_at')[:5]
+
+****Grouping Data****
+from django.db.models.aggregates import Count, Min, Max, Sum, Avg
+result = Product.objects.aggregate(Count('id'))
+{{ result }}
+
+--It does not give a queryset
+--For changing the name:
+    result = Product.objects.aggregate(count = Count('id'))
+--We can apply multiple aggregate function
+    result = Product.objects.aggregate(count = Count('id'), min_price = (Min('unit_price')))
+ 
+
+****Annotating Objects****
+--Sometimes we want to add additional attributes to our objects while querying them, this is where we use annotate method.
+--With the help of this method, we can create new fields in our table.
+    queryset = Customer.objects.annotate(is_new = True)
+    --It means that you are creating a new column in which the values are True. But this will not work
+        from django.db.models import Value
+        queryset = Customer.objects.annotate(is_new = Value(True))
+
+--Another Example
+    queryset = Customer.objects.annotate(new_id = F('id') + 1)
+
+****Calling Database Functions****
+We can use SQL functions like length, concat in this by calling the Func class because it is the base class for SQL functions in django.
+    from django.db.models import Func
+
+    queryset = Customer.objects.annotate(
+        full_name = Func(F('first_name'), Value(' '),
+                         F('last_name'), function = 'CONCAT')
+    )
+--Instead of using Func base class, we directly import the inbuilt functions like this:
+    from django.db.models.functions import Concat
+
+    queryset = Customer.objects.annotate(
+        full_name = Concat(F('first_name'), Value(' '),
+                           F('last_name'))
+    )

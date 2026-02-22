@@ -1,0 +1,99 @@
+****What is Django?****
+It is a free and open-source framework for building web apps with Python.
+It is not the only one framework in python but it is the most popular one.
+It helps us to build a website in a fewer lines of code.
+It comes with a lot of features so we don't have to code it from the scratch.
+
+****Django features****
+(i)The admin site
+An admin interface for managing our data.
+(ii)Object Relational Mapper(ORM)
+That abstracts a database, so we can query the data without writing a lot of SQL code.
+(iii)Authetication
+Package for identifying user
+(iv)Caching
+
+****Installing Part****
+So, in Django we make use of pipenv because it creates a virtual environment.
+Suppose there are two projects (A and B) we need to work on this project but on project A use 3.2 Django version and for project B use 5.0 Django version.
+So if we install Django globally than one version over writes the another.
+That's why we make use of "pipenv"
+
+->Steps
+pip install pipenv
+mkdir storefront (New Folder)
+cd storefront
+pipenv install django
+
+->Fundamental Concepts of a web application
+Suppose we are going to build a online store and publish it on some website(abc.com).
+Now this website is going to have two parts:- Frontend and Backend.
+Frontend is the part that is loaded inside a web browser on a client machine, it is the part that user see and interacts with it.
+Backend is the part that runs on web server and it is responsible for data preprocessing, validating business rule and more.
+Now, suppose i have searched for a website(abc.com), so the browser sends a request to the web server that hosts our website and says "Hey aman wants to see the home page of abc.com", so the web server take this request, process it and return a response back to the client.
+This data exchange is defined by a protocoal called HTTP(Hyper Text Transfer Protocol), It defines how client and server can communicate.
+As the person will navigate the website. For each page browser sends an HTTP request to the server and receives an HTTP response.
+
+Now as part of building the backend for this website we need to decide how we are going to respond to clients.
+(i)To generate the requested page on the server and return it to the client, we use HTML for that.
+(ii)The other option is to return only thr data needed on the requested page and have the client generate the page, so instead of putting a complete HTML doc in an HTTP response, we only return the data like list of products.
+
+Now what is the difference, if we push this responsibility to the client, we can free up the server so it can serve more clients. Our application will be more scalable.
+
+So over the years "SECOND APPROACH" has become more trendy and is now considered as the industry best practice.
+
+****Note****
+Djnago is a server side framework.
+Examples:- DJANGO, ASP.NET CORE, EXPRESS
+Client side server(REACT, ANGULAR, VUE)
+(i)It runs on the server.
+(ii)It handles logic, database, security.
+(iii)It decides what data should be send back to the user
+
+So, if you push the responsibility of generating the web pages to the client, the server essentially becomes a gateway to the data.
+On the server we can provide endpoints that the client can talk to get or save various pieces of data.
+For example:- one endpoint to get the list of products and another end point to get the list of orders.
+Now all these endpoints together represent the interface that clients use to talk to the server.
+In technical terms we say the server provides an API(Application programming interface) to the clients. This API is essentially like the buttons on a remote control, all these buttons together represent the interface or the API we use to interact with the TV.
+
+****MOTIVE****
+Focus will be on using Django to build an API for our online store client application can use this API to get or save the data.
+How these clients are built is irrelevant, here we can use REACT, ANGULAR or even plain JAVASCRIPT which follows under FRONT END DEVELOPMENT which has nothing to do with Django.
+Once we build this API, if you know front end development you can always build a client app that talks to this API
+
+****PipFile****
+Pipfile defines the project’s runtime and development requirements, including Python version and package dependencies.
+
+****Activating the virtual environment****
+Now for activating the virtual environment, we will use the python interpreter inside this virtual environment not the one that is installed globally on this machine.
+
+pipenv shell
+django-admin -> It is used to create and manage Django projects
+cd storefront
+django-admin startproject storefront 
+
+It will create another directory inside the main directory which will be core of our main application.
+
+django-admin startproject storefront . (Use this command) -> It will note create a extra new folder.
+
+****Project Structure****
+(i)__init__.py
+It defines this directory has a package
+(ii)settings.py
+Where we define application settings 
+(iii)urls.py
+Where we define the url of our applications
+(iv)asgi.py asnd wsgi.py
+These are the modules which are used for the deployment
+(v)manage.py (It internally calls django-admin, It knows which project it belongs to)
+This is a wrapper around the django admin. So going forward instead of using django admin, we are going to use manage.py as command. The reason for this is that manage.py takes the setting of this project into account.
+(Use django-admin to create a project, then use manage.py to run and manage that project.)
+For example:
+django-admin runserver (It will give error)
+python manage.py runserver (It will run properly) (By default it will take port 8000)
+python manage.py runserver 9000 (For changing the port, if application is running on another port than we need to change it explicitly)
+
+****Steps****
+pipenv shell (For activating the virtual env)
+python manage.py runserver
+
